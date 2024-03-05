@@ -98,12 +98,16 @@ def telepathy_game(player1, player2, player1_word, player2_word, max_iterations=
 
             # Check if the players have converged on the same word
             similarity = self.cosine_similarity(player1_association, player2_association)
+
             if similarity > 0.8:  # You can adjust the similarity threshold
                 converged = True
+
                 print(f"Players converged on the word: {player1_association}")
+
             else:
                 # Update the words for the next round
                 player1_word = player1_association
+                
                 player2_word = player2_association
 
             iteration += 1
