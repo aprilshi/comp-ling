@@ -80,6 +80,9 @@ def vector_norm(vec):
     return np.sqrt(np.sum(np.square(vec)))
 
 def cosine_similarity(v1, v2):
+    if len(v2) < len(v2):
+         v2 = np.append(v2, np.zeros((len(v1)- len(v2))))
+
     return np.dot(v1, v2) / (vector_norm(v1) * vector_norm(v2))
 
 # telepathy game function
@@ -88,7 +91,7 @@ def telepathy_game(player1, player2, player1_word, player2_word, max_iterations=
 
     iteration = 0
 
-    while not converged and iteration < max_iterations:
+    while not converged and iteration <= max_iterations:
         # append first words to past guesses
         player1.past_guesses.append(player1_word)
         player1.past_guesses.append(player2_word)
@@ -119,20 +122,26 @@ def telepathy_game(player1, player2, player1_word, player2_word, max_iterations=
 
     print("DID NOT CONVERGE.")
 if __name__ == '__main__':
-    player1_file = '/projects/e31408/data/a5/glove_top50k_50d.txt' # glove ( TODO: look into what this source is )
+    player1_file = '/projects/e31408/data/a5/glove_top50k_50d.txt' # wikipedia
     player2_file = 'twitter_glove/glove.twitter.27B.50d.txt' # twitter
     # need to be same dimensions
     player1 = Embeddings(file = player1_file)
     player2 = Embeddings(file = player2_file)
+    while True:
+        print("Continue playing? (y)es (n)o")
+        y_n = str(input()).lower().strip()
+        if (y_n == "n"):
+            break
+        print("Enter a starting word for Player 1.")
+        player1_word = str(input()).lower().strip()
 
-    print("Enter a starting word for Player 1.")
-    player1_word = str(input()).lower().strip()
+        print("Enter a starting word for Player 2.")
+        player2_word = str(input()).lower().strip()
+        
+        # Initialize starting words for both players
+        # player1_word = "she"
+        # player2_word = "party"
+        player1.past_guesses = []
+        player2.past_guesses = []
 
-    print("Enter a starting word for Player 2.")
-    player2_word = str(input()).lower().strip()
-    
-    # Initialize starting words for both players
-    # player1_word = "she"
-    # player2_word = "party"
-
-    telepathy_game(player1, player2, player1_word, player2_word)
+        telepathy_game(player1, player2, player1_word, player2_word)
